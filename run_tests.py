@@ -24,10 +24,10 @@ class AppData(object):
 
         # download flow
         response = urllib.request.urlopen(self.download_url)
-        zip_data = io.StringIO(response.read())
+        zip_data = io.BytesIO(response.read())
         zip_file = zipfile.ZipFile(zip_data)
         exe = zip_file.open(self.zip_path).read()
-        with open(self.executable, 'w') as out:
+        with open(self.executable, 'wb') as out:
             out.write(exe)
         os.chmod(self.executable, 0o744)
 
@@ -59,6 +59,7 @@ class BrowserStackLocal(AppData):
 
     def get_version(self):
         version = subprocess.check_output([BROWSERSTACK, '-version']).strip()
+        version = version.decode('utf-8')
         i = version.rfind(' ')
         version = version[i:].strip('v')
         return list(map(int, version.split('.')))
@@ -86,8 +87,8 @@ def main():
     if not os.path.exists(BIN):
         os.makedirs(BIN)
 
-    flow = Flow()
-    flow.install()
+    # flow = Flow()
+    # flow.install()
     # TODO use flow
     # assert flow.call() == 0
 
@@ -104,7 +105,7 @@ def main():
     time.sleep(5)
 
     # run browserstack tests
-    ok = subprocess.call(['python', 'test/browserstack.py'])
+    ok = subprocess.call(['python3', 'test/browserstack.py'])
     nginx.terminate()
     browserstack.stop()
 

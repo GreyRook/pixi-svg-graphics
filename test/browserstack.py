@@ -100,7 +100,7 @@ class TestRunner(object):
         size = element.size
 
         png = self.driver.get_screenshot_as_png()
-        buf = io.StringIO(png)
+        buf = io.BytesIO(png)
         im = Image.open(buf)
 
         left = location['x']
