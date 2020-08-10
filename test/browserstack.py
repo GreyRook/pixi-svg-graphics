@@ -1,6 +1,6 @@
 import os
 import json
-import cStringIO
+import io
 import sys
 import time
 import subprocess
@@ -71,10 +71,10 @@ def print_results(images_s_bad, images_rms_bad, images_good, cap, images):
     UNDERLINE = '\033[4m'
     HEADER = '\033[95m'
 
-    print '\n' + HEADER + 'Test Results ' + cap['browser'] + ' ' + cap['browser_version'] + ' (' + \
+    print('\n' + HEADER + 'Test Results ' + cap['browser'] + ' ' + cap['browser_version'] + ' (' + \
           str(len(images_good)) + '/' + str(len(images)) + ' passed)' + \
-          ENDC
-    print BOLD + 'filename \t bands \t histogram' + ENDC
+          ENDC)
+    print(BOLD + 'filename \t bands \t histogram' + ENDC)
     for image in images:
         output = image
         if image in images_s_bad:
@@ -85,7 +85,7 @@ def print_results(images_s_bad, images_rms_bad, images_good, cap, images):
             output += '\t ' + FAIL + '[FAIL]'
         else:
             output += '\t ' + OKGREEN + '[OK]'
-        print output + ENDC
+        print(output + ENDC)
 
 class TestRunner(object):
     def __init__(self, driver):
@@ -100,7 +100,7 @@ class TestRunner(object):
         size = element.size
 
         png = self.driver.get_screenshot_as_png()
-        buf = cStringIO.StringIO(png)
+        buf = io.StringIO(png)
         im = Image.open(buf)
 
         left = location['x']

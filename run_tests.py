@@ -1,9 +1,9 @@
 import os
 import sys
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import subprocess
 import zipfile
-import cStringIO
+import io
 import json
 
 import nginc
@@ -23,13 +23,13 @@ class AppData(object):
                 return True
 
         # download flow
-        response = urllib2.urlopen(self.download_url)
-        zip_data = cStringIO.StringIO(response.read())
+        response = urllib.request.urlopen(self.download_url)
+        zip_data = io.StringIO(response.read())
         zip_file = zipfile.ZipFile(zip_data)
         exe = zip_file.open(self.zip_path).read()
         with open(self.executable, 'w') as out:
             out.write(exe)
-        os.chmod(self.executable, 0744)
+        os.chmod(self.executable, 0o744)
 
     def call(self, *args):
         cmd = [self.executable]
@@ -48,7 +48,7 @@ class Flow(AppData):
         version = version.strip()
         i = version.rfind(' ')
         version = version[i:]
-        return map(int, version.split('.'))
+        return list(map(int, version.split('.')))
 
 
 class BrowserStackLocal(AppData):
@@ -61,7 +61,7 @@ class BrowserStackLocal(AppData):
         version = subprocess.check_output([BROWSERSTACK, '-version']).strip()
         i = version.rfind(' ')
         version = version[i:].strip('v')
-        return map(int, version.split('.'))
+        return list(map(int, version.split('.')))
 
     def __init__(self):
         # read config
@@ -69,7 +69,7 @@ class BrowserStackLocal(AppData):
         config = os.path.expanduser('~/.browserstack.json')
         self.config = json.load(open(config))
 
-        print self.config
+        print(self.config)
 
     def start(self, arg):
         if self.proc:
