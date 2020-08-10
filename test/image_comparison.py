@@ -4,6 +4,7 @@ import operator
 
 from PIL import Image
 import numpy
+from functools import reduce
 
 
 def image_similarity_bands_via_numpy(filepath1, filepath2):
@@ -56,7 +57,7 @@ def get_thumbnail(image, size=(200, 200), stretch_to_fit=False, greyscale=False)
 def compare(filepath1, filepath2):
     s = image_similarity_bands_via_numpy(filepath1, filepath2)
     rms = image_similarity_histogram_via_pil(filepath1, filepath2)
-    print s, rms
+    print(s, rms)
 
     return {'s': s < 12000, 'rms': rms < 16}
 
@@ -64,11 +65,11 @@ def compare(filepath1, filepath2):
 def main():
     img0 = sys.argv[1]
     img1 = sys.argv[2]
-    print 'image_similarity_bands_via_numpy'
-    print image_similarity_bands_via_numpy(img0, img1)
+    print('image_similarity_bands_via_numpy')
+    print(image_similarity_bands_via_numpy(img0, img1))
 
-    print 'image_similarity_histogram_via_pil'
-    print image_similarity_histogram_via_pil(img0, img1)
+    print('image_similarity_histogram_via_pil')
+    print(image_similarity_histogram_via_pil(img0, img1))
 
 
 if __name__ == '__main__':
