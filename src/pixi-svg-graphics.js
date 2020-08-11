@@ -236,6 +236,7 @@ SVGGraphics.prototype.clone = function(){
 SVGGraphics.prototype.updateTransform = function () {
     PIXI.DisplayObject.prototype.updateTransform.call(this);
 
+    // Support for vector effect 'non-scaling-strokes'
     if (this._nonScaling) {
         for (var i = 0; i < this.graphicsData.length; i++) {
             if (this.graphicsData[i].lineWidth > 0) {
